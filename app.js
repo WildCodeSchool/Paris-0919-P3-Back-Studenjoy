@@ -1,0 +1,1 @@
+const connection = require('./helpers/db'); //CONNECTION TO DATABASE
