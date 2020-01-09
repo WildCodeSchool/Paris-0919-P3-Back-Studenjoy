@@ -10,3 +10,5 @@ DB_PWD=tonMotDePasseIciSansSpace
 DB_NAME=leNomDeTaBaseDeDonnéesSansSpace
 
 Sinon, j'ai utilisé "studen_joy_phpMyAdmin.sql" pour faire les tests
+
+N'oubliez pas de faire "npm i"
