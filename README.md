@@ -12,3 +12,5 @@ DB_NAME=leNomDeTaBaseDeDonnéesSansSpace
 Sinon, j'ai utilisé "studen_joy_phpMyAdmin.sql" pour faire les tests
 
 N'oubliez pas de faire "npm i"
+
+"npm run dev" pour démarrer le server
