@@ -35,17 +35,6 @@ router.get('/students/:id', (req, res) => {
 // UPDATE student infos
 
 router.put('/students/:id', (req, res) => {
-  // Vérifier si ce qu'on veut modifier existe dans la table
-  const updates = Object.keys(req.body);
-  // Je n'ai que ces deux valeurs pour le moment dans ma table, on pourra rajouter les autres après
-  const allowedUpdates = ['first_name', 'last_name'];
-  const isValidOperation = updates.every(update =>
-    allowedUpdates.includes(update)
-  );
-  // Si on veut mettre à jour une donnée qui n'existe pas dans la table, on aura un message d'erreur
-  if (!isValidOperation) {
-    return res.status(400).send({ error: 'Invalid updates' });
-  }
   const idStudent = req.params.id;
   const formData = req.body;
   connection.query(
