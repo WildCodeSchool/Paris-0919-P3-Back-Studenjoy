@@ -46,17 +46,15 @@ router.put('/students/:id', (req, res) => {
   if (!isValidOperation) {
     return res.status(400).send({ error: 'Invalid updates' });
   }
-  const values = Object.values(req.body);
-  values.push(req.params.id);
-  const setValues = updates
-    .map((elt, i) => (i !== updates.length - 1 ? `${elt} = ?,` : `${elt} = ?`))
-    .join('');
+  const idStudent = req.params.id;
+  const formData = req.body;
   connection.query(
-    `UPDATE student SET ${setValues}  WHERE id = ?`,
-    values,
+    'UPDATE student SET ? WHERE id = ?',
+    [formData, idStudent],
     (err, results) => {
       if (err) {
-        res.send(err).status(500);
+        console.log(err);
+        res.status(500).send('Erreur lors de la modification des données');
       } else {
         res.json(results);
       }
