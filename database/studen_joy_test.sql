@@ -29,7 +29,7 @@ CREATE TABLE doc_type (
     doc_name VARCHAR(255) UNIQUE NOT NULL
 );
 
--- Cette table permet éventuellement de savoit quelles sont les spécialités qui existent dans une école 
+-- Cette table permet éventuellement de savoir quelles sont les spécialités qui existent dans une école 
 CREATE TABLE school_speciality (
   speciality_id INT NOT NULL,
   school_id INT NOT NULL,
@@ -47,6 +47,12 @@ CREATE TABLE school_speciality (
 -- Silver_track propose data science et foreign language id 2
 
 INSERT INTO school_speciality (speciality_id,school_id) VALUES(1,1), (2,1), (1,4), (4,4), (4,2), (3,2);
+
+INSERT INTO `student` (`id`, `first_name`, `last_name`) VALUES
+(1, 'Jule', 'Corea'),
+(2, 'Julie', 'Smith'),
+(3, 'Paul', 'Becky'),
+(4, 'Bob', 'Dylan');
 
 -- Une personne peut avoir plusieurs candidatures mais une canditure est forcément liée à la fois à une école, une personne et une spécialité
 CREATE TABLE application (
