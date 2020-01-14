@@ -3,8 +3,7 @@ const connection = require('../../helpers/db');
 const router = express.Router();
 
 // Post student choice
-router.post('/students/choices/:id', (req, res) => {
-  const idStudent = req.params.id;
+router.post('/students/application', (req, res) => {
   const formData = req.body;
   connection.query(
     `INSERT INTO application SET ?`,
@@ -13,10 +12,10 @@ router.post('/students/choices/:id', (req, res) => {
       if (err) {
         res.send('Erreur lors de la sauvegarde des données').status(500);
       } else {
-        console.log(formData);
-
         res.json(results);
       }
     }
   );
 });
+
+module.exports = router;
