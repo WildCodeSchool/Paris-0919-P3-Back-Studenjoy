@@ -108,18 +108,4 @@ WHERE
   });
 });
 
-// Add more documents
-// router.post('/students/documents/:id', (req, res) => {
-//   const formData = req.body;
-//   connection.query(`INSERT INTO doc_admin SET ?`, formData, (err, results) => {
-//     if (err) {
-//       res.send('Erreur lors de la sauvegarde des données').status(500);
-//     } else {
-//       console.log(formData);
-
-//       res.json(results);
-//     }
-//   });
-// });
-
 module.exports = router;
