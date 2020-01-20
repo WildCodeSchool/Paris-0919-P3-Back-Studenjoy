@@ -1,12 +1,12 @@
-const express = require('express');
-const connection = require('../../helpers/db');
+const express = require("express");
+const connection = require("../../helpers/db");
 const router = express.Router();
 
-router.get('/students', (req, res) => {
+router.get("/students", (req, res) => {
   connection.query(`SELECT * FROM student`, (err, results) => {
     if (err) {
       res
-        .send('Erreur lors de la récupération de la liste des étudiants')
+        .send("Erreur lors de la récupération de la liste des étudiants")
         .status(500);
     } else {
       console.log(results);
@@ -17,11 +17,11 @@ router.get('/students', (req, res) => {
 
 // POST student infos
 
-router.post('/students', (req, res) => {
+router.post("/students", (req, res) => {
   const formData = req.body;
   connection.query(`INSERT INTO student SET ?`, formData, (err, results) => {
     if (err) {
-      res.send('Erreur lors de la sauvegarde des données').status(500);
+      res.send("Erreur lors de la sauvegarde des données").status(500);
     } else {
       console.log(formData);
 
@@ -33,7 +33,7 @@ router.post('/students', (req, res) => {
 // GET student infos
 
 //afficher les information d'un élève'
-router.get('/students/:id', (req, res) => {
+router.get("/students/:id", (req, res) => {
   connection.query(
     `SELECT * FROM student WHERE id=${req.params.id}`,
     (err, results) => {
@@ -50,16 +50,16 @@ router.get('/students/:id', (req, res) => {
 
 // UPDATE student infos
 
-router.put('/students/:id', (req, res) => {
+router.put("/students/:id", (req, res) => {
   const idStudent = req.params.id;
   const formData = req.body;
   connection.query(
-    'UPDATE student SET ? WHERE id = ?',
+    "UPDATE student SET ? WHERE id = ?",
     [formData, idStudent],
     (err, results) => {
       if (err) {
         console.log(err);
-        res.status(500).send('Erreur lors de la modification des données');
+        res.status(500).send("Erreur lors de la modification des données");
       } else {
         res.json(results);
       }
@@ -69,10 +69,10 @@ router.put('/students/:id', (req, res) => {
 
 // DELETE student infos
 
-router.delete('/students/:id', (req, res) => {
+router.delete("/students/:id", (req, res) => {
   const idStudent = req.params.id;
 
-  connection.query('DELETE FROM student WHERE id = ?', [idStudent], err => {
+  connection.query("DELETE FROM student WHERE id = ?", [idStudent], err => {
     if (err) {
       // If an error has occurred, then the user is informed of the error
       console.log(err);
@@ -85,7 +85,7 @@ router.delete('/students/:id', (req, res) => {
 });
 
 // GET student all documents
-router.get('/students/documents/:id', (req, res) => {
+router.get("/students/documents/:id", (req, res) => {
   const studentId = req.params.id;
   const query = `SELECT 
   first_name, last_name,doc_name, doc_link
@@ -106,6 +106,28 @@ WHERE
       res.json(results);
     }
   });
+});
+
+// DELETE student school choice
+
+router.delete("/students/:id/:schoolid/:specialityid", (req, res) => {
+  const idStudent = req.params.id;
+  const idSchool = req.params.schoolid;
+  const idSpeciality = req.params.specialityid;
+
+  connection.query(
+    `DELETE FROM application WHERE student_id = ${idStudent} AND school_id = ${idSchool} AND speciality_id = ${idSpeciality}`,
+    err => {
+      if (err) {
+        // If an error has occurred, then the user is informed of the error
+        console.log(err);
+        res.status(500).send("Error deleting student's info");
+      } else {
+        // If everything went well, we send a status "ok".
+        res.sendStatus(200);
+      }
+    }
+  );
 });
 
 module.exports = router;
