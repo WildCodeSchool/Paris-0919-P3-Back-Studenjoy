@@ -25,13 +25,15 @@ WHERE
       ? and
       : ''
   }
+  
   ${req.query.school ? school : ''}
-  ${req.query.school && (req.query.city || req.query.speciality) ? and : ''}
+  ${req.query.school && req.query.city && req.query.speciality ? and : ''}
 
   ${req.query.city ? city : ''}`;
 
   connection.query(query, (err, results) => {
     if (err) {
+      console.log(err);
       res
         .status(500)
         .send('Erreur lors de la récupération de la liste des étudiants');
