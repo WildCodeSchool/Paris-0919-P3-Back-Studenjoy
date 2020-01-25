@@ -4,8 +4,9 @@ const router = express.Router();
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const auth = require('../../middlewares/auth');
 
-router.get('/students', (req, res) => {
+router.get('/students', auth, (req, res) => {
   connection.query(`SELECT * FROM student`, (err, results) => {
     if (err) {
       res
@@ -164,6 +165,50 @@ router.post('/signin', (req, res) => {
             console.log("message: 'password does not match'");
             res.json(results);
           }
+        });
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
+// SIGNUP
+
+router.post('/signup', (req, res) => {
+  const formData = req.body;
+  const email = req.body.email;
+  connection.query(
+    `SELECT * FROM student WHERE email='${email}'`,
+    (err, results) => {
+      if (!results[0]) {
+        bcrypt.hash(req.body.student_password, 10, (err, hash) => {
+          formData.student_password = hash;
+          connection.query(
+            `INSERT INTO student SET ?`,
+            formData,
+            (err, results) => {
+              if (err) {
+                console.log(err);
+                res
+                  .status(500)
+                  .send('Erreur lors de la sauvegarde des données');
+              } else {
+                jwt.sign(
+                  { student: { id: results.insertId } },
+                  process.env.JWT_SECRET,
+                  { expiresIn: '10h' },
+                  (err, token) => {
+                    res.json({
+                      token,
+                      results
+                    });
+                  }
+                );
+              }
+            }
+          );
+          console.log(formData);
         });
       } else {
         res.json(results);
