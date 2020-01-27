@@ -1,15 +1,19 @@
-const express = require("express");
-const connection = require("../../helpers/db");
+const express = require('express');
+const connection = require('../../helpers/db');
 const router = express.Router();
+const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const auth = require('../../middlewares/auth');
 
-router.get("/students", (req, res) => {
+router.get('/students', auth, (req, res) => {
   connection.query(`SELECT * FROM student`, (err, results) => {
     if (err) {
       res
-        .send("Erreur lors de la récupération de la liste des étudiants")
+        .send('Erreur lors de la récupération de la liste des étudiants')
         .status(500);
     } else {
-      console.log(results);
+      console.log(req.id);
       res.json(results);
     }
   });
@@ -17,11 +21,11 @@ router.get("/students", (req, res) => {
 
 // POST student infos
 
-router.post("/students", (req, res) => {
+router.post('/students', (req, res) => {
   const formData = req.body;
   connection.query(`INSERT INTO student SET ?`, formData, (err, results) => {
     if (err) {
-      res.send("Erreur lors de la sauvegarde des données").status(500);
+      res.send('Erreur lors de la sauvegarde des données').status(500);
     } else {
       console.log(formData);
 
@@ -33,7 +37,7 @@ router.post("/students", (req, res) => {
 // GET student infos
 
 //afficher les information d'un élève'
-router.get("/students/:id", (req, res) => {
+router.get('/students/:id', (req, res) => {
   connection.query(
     `SELECT * FROM student WHERE id=${req.params.id}`,
     (err, results) => {
@@ -50,16 +54,16 @@ router.get("/students/:id", (req, res) => {
 
 // UPDATE student infos
 
-router.put("/students/:id", (req, res) => {
+router.put('/students/:id', (req, res) => {
   const idStudent = req.params.id;
   const formData = req.body;
   connection.query(
-    "UPDATE student SET ? WHERE id = ?",
+    'UPDATE student SET ? WHERE id = ?',
     [formData, idStudent],
     (err, results) => {
       if (err) {
         console.log(err);
-        res.status(500).send("Erreur lors de la modification des données");
+        res.status(500).send('Erreur lors de la modification des données');
       } else {
         res.json(results);
       }
@@ -69,10 +73,10 @@ router.put("/students/:id", (req, res) => {
 
 // DELETE student infos
 
-router.delete("/students/:id", (req, res) => {
+router.delete('/students/:id', (req, res) => {
   const idStudent = req.params.id;
 
-  connection.query("DELETE FROM student WHERE id = ?", [idStudent], err => {
+  connection.query('DELETE FROM student WHERE id = ?', [idStudent], err => {
     if (err) {
       // If an error has occurred, then the user is informed of the error
       console.log(err);
@@ -85,7 +89,7 @@ router.delete("/students/:id", (req, res) => {
 });
 
 // GET student all documents
-router.get("/students/documents/:id", (req, res) => {
+router.get('/students/documents/:id', (req, res) => {
   const studentId = req.params.id;
   const query = `SELECT 
   first_name, last_name,doc_name, doc_link
@@ -110,7 +114,7 @@ WHERE
 
 // DELETE student school choice
 
-router.delete("/students/:id/:schoolid/:specialityid", (req, res) => {
+router.delete('/students/:id/:schoolid/:specialityid', (req, res) => {
   const idStudent = req.params.id;
   const idSchool = req.params.schoolid;
   const idSpeciality = req.params.specialityid;
@@ -125,6 +129,89 @@ router.delete("/students/:id/:schoolid/:specialityid", (req, res) => {
       } else {
         // If everything went well, we send a status "ok".
         res.sendStatus(200);
+      }
+    }
+  );
+});
+
+// SignIn
+
+router.post('/signin', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.student_password;
+  connection.query(
+    `SELECT * FROM student WHERE email='${email}'`,
+    (err, results) => {
+      if (results[0]) {
+        const storedPassword = results[0].student_password;
+        bcrypt.compare(password, storedPassword, function(err, isMatch) {
+          if (err) {
+            console.log(err);
+            res.json(err);
+          } else if (isMatch) {
+            console.log('Logged');
+            jwt.sign(
+              { student: results[0] },
+              process.env.JWT_SECRET,
+              { expiresIn: '10h' },
+              (err, token) => {
+                res.json({
+                  token
+                });
+              }
+            );
+            // res.json(results[0]);
+          } else {
+            console.log("message: 'password does not match'");
+            res.json(results);
+          }
+        });
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
+// SIGNUP
+
+router.post('/signup', (req, res) => {
+  const formData = req.body;
+  const email = req.body.email;
+  connection.query(
+    `SELECT * FROM student WHERE email='${email}'`,
+    (err, results) => {
+      if (!results[0]) {
+        bcrypt.hash(req.body.student_password, 10, (err, hash) => {
+          formData.student_password = hash;
+          connection.query(
+            `INSERT INTO student SET ?`,
+            formData,
+            (err, results) => {
+              if (err) {
+                console.log(err);
+                res
+                  .status(500)
+                  .send('Erreur lors de la sauvegarde des données');
+              } else {
+                jwt.sign(
+                  { student: { id: results.insertId } },
+                  process.env.JWT_SECRET,
+                  { expiresIn: '10h' },
+                  (err, token) => {
+                    res.json({
+                      token,
+                      results
+                    });
+                  }
+                );
+              }
+            }
+          );
+          console.log(formData);
+        });
+      } else {
+        res.json(results);
       }
     }
   );
