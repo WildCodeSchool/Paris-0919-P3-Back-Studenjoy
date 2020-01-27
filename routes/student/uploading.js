@@ -10,26 +10,43 @@ const fs = require("fs");
 
 router.post("/students/documents/:id", upload.array("file"), (req, res, next) => {
   req.files.map(file => {
+    // Tu récupères le timestamp unique
     let Timestamp = Math.round(new Date().getTime() / 1000)
+    // Tu recupères le nom orinal du fichier 
     let FileName = file.originalname
+    // Regex pour supprimer les espaces
     let regex1 = /\’\”/gi;
+    // Ici on change le nom du fichier 
     let NewFileName = FileName.replace(regex1,"").split(" ").join("").toLowerCase()
     console.log('name', FileName)
     console.log('newname', NewFileName)
     
-    fs.rename(file.path, "public/" + file.originalname, err => {
+    // A partir d'ici on envoie le/les files en BDD
+    // FS change le nom du fichier en y ajoutant le chemin vers dossier public
+    fs.rename(file.path, "public/" + Timestamp + file.originalname, err => {
       if (err) {
         console.log(err)
         return res.send("Problem during travel").status(500);
       } else {
+        // Ici on construit "l'objet" qui sera stocké en BDD
         const objectFile = {
-          doc_name : "public/" + file.originalname
-        }
-        connection.query("INSERT INTO doc_type SET ?", objectFile, err => {
+          doc_name : "public/" + file.originalname }
+        // Puis on insert en BDD
+        connection.query("INSERT INTO doc_type SET ?", objectFile, (err, result) => {
           if (err) {
             console.log(err)
             return res.send("Error ocurred").status(500);
           }
+          return idFile = result.insertId;
+        })
+        let objet = {
+          doc_link: "public/" + file.originalname,
+          doc_type_id : idFile,
+          student_id : req.params.id
+        }
+        connection.query('INSERT INTO doc_admin SET ?', objet, err => {
+          console.log(err)
+            return res.send("Error ocurred").status(500);
         })
       }
     })
@@ -37,68 +54,28 @@ router.post("/students/documents/:id", upload.array("file"), (req, res, next) =>
   return res.send("Files uploaded sucessfully").status(200);
 });
 
-
-
-
-
-
-
-
-
-
-
-
- router.post('/students/documents/:id', upload.array("file"), (req, res, next) => {
-  // ici je récupère mes files 
-  const files = req.files;
-  const objectFile = ''
-  // Je boucle sur tous les files pour changer leur nom et les placer dans le dossier public
-
-  files.map(file => {
-    fs.rename(file.path, "public/" + file.originalName, err => {
-      if(err) {
-        console.log(err)
-        return res.send('Problem during rename').status(500);
-      } else {
-        const objectFile = {doc_name : "public/" + file.originalName}
-      }
-      connection.query("INSERT INTO doc_type SET ?", objectFile, err => {
-        if(err) {
-          console.log(err)
-          return res.send('Error during uploading').status(500);
-        }
-      })
-    })
-    
-  })
-  return res.send('Success').status(200)
+ router.get('/students/doc/:id',(req,res) => {
+   connection.query('select * from doc_admin where student_id = ?', req.params.id, (err, results) => {
+    if (err) {
+      console.log(err)
+      return res.send("Error ocurred").status(500);
+    } else {
+      console.log(results)
+      return res.send(results).status(200)
+    }
+   })
  })
-   
-//  router.put('/students/documents/:id', (req, res)=>{
-//    const formData = req.body;
-//    connection.query(`UPDATE docs_types SET ?`, formData, (err, results)=> {
-//      if(err){
-//        res.send('Erreur lors du telechagement de fichier').status(500);
-//      }else{
-//        res.send('le fichier a bien été télécharger').status(200)
-//        console.log(results);
-       
-//      }
 
-//    });
-//  })
-//  router.delete('/students/documents/: id', (req, res)=>{
-//    const formData = req.body;
-//    connection.query(`DELETE FROM docs_types SET ?`, formData, (err, results) => {
-//      if(err){
-//        res.send('Erreur lors de le suppression du fichier').status(500);
-//      }else{
-//        res.send('Le fichier a bien été supprimé').status(200)
-       
-//      }
-//    })
-//  })
- 
+router.delete('/students/documents/:id', (req, res)=>{
+  connection.query(`DELETE FROM doc_type WHERE id=${req.params.id}`,err =>{
+    if(err){
+    console.log(err)
+    return res.send("N'a pas été supprimé").status(500)
+    } else {
+      return res.send("Files deleted sucessfully").status(200);
+    }
+  }) 
+});
   
 module.exports = router;
  

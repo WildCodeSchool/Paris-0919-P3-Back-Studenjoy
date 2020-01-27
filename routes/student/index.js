@@ -1,6 +1,10 @@
+
+
 const express = require('express');
 const connection = require('../../helpers/db');
 const router = express.Router();
+
+
 
 router.get('/students', (req, res) => {
   connection.query(`SELECT * FROM student`, (err, results) => {

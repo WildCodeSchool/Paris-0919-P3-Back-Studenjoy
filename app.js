@@ -14,6 +14,7 @@ const port = 5000;
 // const util = require('util');
 
 app.use(cors());
+app.use(morgan('dev'))
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
