@@ -1,11 +1,11 @@
 const mysql = require('mysql');
-const bdd_name = 'new_studen_joy';
+const bdd_name = 'studen_joy';
 const port = 3306;
 
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '', // INSERT YOUR PASSWORD HERE
+  password: 'jecode4wcs', // INSERT YOUR PASSWORD HERE
   database: bdd_name // INSERT YOUR DATABASE NAME HERE
 });
 connection.connect(function(err) {
