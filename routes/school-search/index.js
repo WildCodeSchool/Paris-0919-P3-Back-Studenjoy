@@ -43,4 +43,31 @@ WHERE
   });
 });
 
+// All school
+router.get('/schools', (req, res) => {
+  connection.query(`SELECT * FROM school`, (err, results) => {
+    if (err) {
+      res
+        .status(500)
+        .send('Erreur lors de la récupération de la liste des écoles');
+    } else {
+      console.log(results);
+      res.json(results);
+    }
+  });
+});
+
+router.get('/schools_specialized', (req, res) => {
+  connection.query(`SELECT * FROM school as sco JOIN school_speciality scos ON sco.id = scos.school_id JOIN
+  speciality as spe ON spe.id = scos.speciality_id`, (err, results) => {
+    if (err) {
+      res
+        .status(500)
+        .send('Erreur lors de la récupération de la liste des écoles');
+    } else {
+      console.log(results);
+      res.json(results);
+    }
+  });
+});
 module.exports = router;
