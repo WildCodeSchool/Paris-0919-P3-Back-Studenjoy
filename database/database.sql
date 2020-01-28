@@ -54,14 +54,11 @@ DROP TABLE IF EXISTS `doc_admin`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `doc_admin` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `doc_link` varchar(255) NOT NULL,
-  `doc_type_id` int(11) NOT NULL,
+  `doc_name` varchar(255) NOT NULL,
   `student_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `doc_type_id` (`doc_type_id`),
   KEY `student_id` (`student_id`),
-  CONSTRAINT `doc_admin_ibfk_1` FOREIGN KEY (`doc_type_id`) REFERENCES `doc_type` (`id`),
-  CONSTRAINT `doc_admin_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+  CONSTRAINT `doc_admin_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -71,34 +68,12 @@ CREATE TABLE `doc_admin` (
 
 LOCK TABLES `doc_admin` WRITE;
 /*!40000 ALTER TABLE `doc_admin` DISABLE KEYS */;
-INSERT INTO `doc_admin` VALUES (1,'http://tennesseeledger.com/wp-content/uploads/2018/12/Masters.jpg',3,1),(2,'https://www.passeport.ma/images/passeport.png',4,2),(3,'https://consulat-creteil-algerie.fr/wp-content/uploads/2018/01/Passeport.png',4,2),(4,'http://lucadeparis.free.fr/copywrong/lutonadio/gedeon_lutonadio_cni.jpg',2,4);
+INSERT INTO `doc_admin` VALUES (1,'http://tennesseeledger.com/wp-content/uploads/2018/12/Masters.jpg',3),(2,'https://www.passeport.ma/images/passeport.png',2),(3,'https://consulat-creteil-algerie.fr/wp-content/uploads/2018/01/Passeport.png',2),(4,'http://lucadeparis.free.fr/copywrong/lutonadio/gedeon_lutonadio_cni.jpg',1);
 /*!40000 ALTER TABLE `doc_admin` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `doc_type`
---
 
-DROP TABLE IF EXISTS `doc_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `doc_type` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `doc_name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `doc_name` (`doc_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `doc_type`
---
-
-LOCK TABLES `doc_type` WRITE;
-/*!40000 ALTER TABLE `doc_type` DISABLE KEYS */;
-INSERT INTO `doc_type` VALUES (1,'bachelor degree'),(2,'identity card'),(3,'master degree'),(4,'passport');
-/*!40000 ALTER TABLE `doc_type` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `school`
@@ -201,6 +176,7 @@ CREATE TABLE `student` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `school` varchar(255) DEFAULT NULL,
   `speciality` varchar(255) DEFAULT NULL,
+  `picture` VARCHAR(255),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -211,7 +187,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (1,'Jule','Corea','jule@gmail.com','mascculin','0707070707','cestmoijule','2005-12-20',0,'2020-01-12 18:21:12',NULL,NULL),(2,'Julie','Smith','julie@gmail.com','feminin','0723140707','cestmoijulie','2002-05-20',0,'2020-01-12 18:21:12',NULL,NULL),(3,'Paul','Becky','paul@gmail.com','mascculin','0707078765','cestmoipaul','2000-11-10',0,'2020-01-12 18:21:12',NULL,NULL),(4,'Bob','Dylan','bob@gmail.com','mascculin','0708775789','cestmoibob','2003-09-17',0,'2020-01-12 18:21:12',NULL,NULL),(5,'Ibra','Niass','ibra@gmail.com','masculin','0758325825','facile','1999-08-17',0,'2020-01-12 21:09:28',NULL,NULL),(6,'Louise','Corea','louise@gmail.com','féminin','0756545825','noway','1996-04-11',0,'2020-01-12 21:15:38',NULL,NULL),(8,'Silvia','Dacosta','silvia@gmail.com','féminin','0756005825','guessit','1994-09-21',0,'2020-01-12 22:09:23',NULL,NULL);
+INSERT INTO `student` VALUES (1,'Jule','Corea','jule@gmail.com','mascculin','0707070707','cestmoijule','2005-12-20',0,'2020-01-12 18:21:12',NULL,NULL,NULL),(2,'Julie','Smith','julie@gmail.com','feminin','0723140707','cestmoijulie','2002-05-20',0,'2020-01-12 18:21:12',NULL,NULL,NULL),(3,'Paul','Becky','paul@gmail.com','mascculin','0707078765','cestmoipaul','2000-11-10',0,'2020-01-12 18:21:12',NULL,NULL,NULL),(4,'Bob','Dylan','bob@gmail.com','mascculin','0708775789','cestmoibob','2003-09-17',0,'2020-01-12 18:21:12',NULL,NULL,NULL),(5,'Ibra','Niass','ibra@gmail.com','masculin','0758325825','facile','1999-08-17',0,'2020-01-12 21:09:28',NULL,NULL,NULL),(6,'Louise','Corea','louise@gmail.com','féminin','0756545825','noway','1996-04-11',0,'2020-01-12 21:15:38',NULL,NULL,NULL),(8,'Silvia','Dacosta','silvia@gmail.com','féminin','0756005825','guessit','1994-09-21',0,'2020-01-12 22:09:23',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

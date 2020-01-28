@@ -1,18 +1,18 @@
 const mysql = require('mysql');
-const bdd_name = 'studen_joy';
+const bdd_name = 'new_studen_joy';
 const port = 3306;
 
 const connection = mysql.createConnection({
-  host:'localhost',
+  host: 'localhost',
   user: 'root',
-  password: 'jecode4wcs', // INSERT YOUR PASSWORD HERE
+  password: '', // INSERT YOUR PASSWORD HERE
   database: bdd_name // INSERT YOUR DATABASE NAME HERE
 });
-connection.connect(function (err) {
+connection.connect(function(err) {
   if (!err) {
-      console.log(`## 🤙 MySQL is connected to ${bdd_name} on port ${port}`);
+    console.log(`## 🤙 MySQL is connected to ${bdd_name} on port ${port}`);
   } else {
-      console.log("### 👎 Error connecting database", err);
+    console.log('### 👎 Error connecting database', err);
   }
 });
 
