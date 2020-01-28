@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan')
 const app = express();
+
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const studentRouter = require('./routes/student');
@@ -10,9 +11,11 @@ const dotenv = require('dotenv').config();
 
 const port = 5000;
 
+const choicesRouter = require('./routes/student_choices');
+const searchRouter = require('./routes/school-search');
+const port = process.env.PORT;
 
 // const util = require('util');
-
 app.use(cors());
 app.use(morgan('dev'))
 app.use(bodyParser.json());
@@ -22,6 +25,11 @@ app.use(
   })
 
 );
+
+app.use(studentRouter);
+app.use(choicesRouter);
+app.use(searchRouter);
+
 
 
 app.use(studentRouter);
