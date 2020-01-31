@@ -10,18 +10,18 @@ router.post('/students/application', auth, (req, res) => {
   const specialityId = req.body.speciality_id;
   const query = `SELECT
   *
-FROM
-  application
-WHERE
-  school_id = ${schoolId} 
-  and
-  speciality_id=${specialityId}
-  and
-  student_id=${req.id}
+  FROM
+    application
+  WHERE
+    school_id = ${schoolId} 
+    and
+    speciality_id=${specialityId}
+    and
+    student_id=${req.id}
   `;
   connection.query(query, formData, (err, results) => {
     if (err) {
-      res.status(500).send('Erreur lors de la sauvegarde des données');
+      res.status(500).send(err);
     } else {
       if (results.length) {
         return res.status(500).send('Cette candidature existe déjà');
@@ -31,7 +31,7 @@ WHERE
         formData,
         (err, results) => {
           if (err) {
-            res.status(500).send('Erreur lors de la sauvegarde des données');
+            res.status(500).send(err);
           } else {
             res.json(results);
           }
@@ -49,7 +49,7 @@ router.get('/students/application', auth, (req, res) => {
   console.log('id', id);
   // console.log('req.id', req.id);
   const query = `SELECT 
-  first_name, last_name, speciality_name, school_name
+  first_name, last_name, speciality_name, school_name, school_address, school.city, school.phone, school.email
   FROM
   student
       INNER JOIN
@@ -64,7 +64,7 @@ WHERE
     if (err) {
       res
         .send(
-          "Erreur lors de la récupération des infos de l'étudiant application whatt"
+          err
         )
         .status(500);
     } else {
