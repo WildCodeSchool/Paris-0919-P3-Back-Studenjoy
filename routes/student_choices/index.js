@@ -6,17 +6,39 @@ const auth = require('../../middlewares/auth');
 // Post student choice
 router.post('/students/application', auth, (req, res) => {
   const formData = req.body;
-  connection.query(
-    `INSERT INTO application SET ?`,
-    formData,
-    (err, results) => {
-      if (err) {
-        res.status(500).send('Erreur lors de la sauvegarde des données');
-      } else {
-        res.json(results);
+  const schoolId = req.body.school_id;
+  const specialityId = req.body.speciality_id;
+  const query = `SELECT
+  *
+FROM
+  application
+WHERE
+  school_id = ${schoolId} 
+  and
+  speciality_id=${specialityId}
+  and
+  student_id=${req.id}
+  `;
+  connection.query(query, formData, (err, results) => {
+    if (err) {
+      res.status(500).send('Erreur lors de la sauvegarde des données');
+    } else {
+      if (results.length) {
+        return res.status(500).send('Cette candidature existe déjà');
       }
+      connection.query(
+        `INSERT INTO application SET ?`,
+        formData,
+        (err, results) => {
+          if (err) {
+            res.status(500).send('Erreur lors de la sauvegarde des données');
+          } else {
+            res.json(results);
+          }
+        }
+      );
     }
-  );
+  });
 });
 
 // Get all student choices
