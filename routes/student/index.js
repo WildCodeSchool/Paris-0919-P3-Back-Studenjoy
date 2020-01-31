@@ -8,18 +8,18 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const auth = require('../../middlewares/auth');
 
-router.get('/students', auth, (req, res) => {
-  connection.query(`SELECT * FROM student`, (err, results) => {
-    if (err) {
-      res
-        .send('Erreur lors de la récupération de la liste des étudiants test')
-        .status(500);
-    } else {
-      console.log(req.id);
-      res.json(results);
-    }
-  });
-});
+// router.get('/students', auth, (req, res) => {
+//   connection.query(`SELECT * FROM student`, (err, results) => {
+//     if (err) {
+//       res
+//         .send('Erreur lors de la récupération de la liste des étudiants test')
+//         .status(500);
+//     } else {
+//       console.log(req.id);
+//       res.json(results);
+//     }
+//   });
+// });
 
 // POST student infos
 

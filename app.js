@@ -9,7 +9,6 @@ const uploading = require('./routes/student/uploading')
 const dotenv = require('dotenv').config();
 // const connection = require('./helpers/db'); //CONNECTION TO DATABASE
 
-const port = 5000;
 
 const choicesRouter = require('./routes/student_choices');
 const searchRouter = require('./routes/school-search');
