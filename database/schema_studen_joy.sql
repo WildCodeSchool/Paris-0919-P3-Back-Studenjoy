@@ -22,8 +22,8 @@ CREATE TABLE student (
 
 CREATE TABLE school (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    school_name VARCHAR(255) UNIQUE NOT NULL,
-    city VARCHAR(255) UNIQUE NOT NULL,
+    school_name VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
     email VARCHAR(50),
     school_address VARCHAR(50),
     phone VARCHAR(50)

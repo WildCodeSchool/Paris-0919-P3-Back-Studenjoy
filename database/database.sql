@@ -89,9 +89,7 @@ CREATE TABLE `school` (
   `email` varchar(50) DEFAULT NULL,
   `school_address` varchar(50) DEFAULT NULL,
   `phone` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `school_name` (`school_name`),
-  UNIQUE KEY `city` (`city`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
