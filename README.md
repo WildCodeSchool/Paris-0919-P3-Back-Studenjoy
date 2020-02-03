@@ -8,6 +8,7 @@ DB_HOST=localhost
 DB_USER=root
 DB_PWD=tonMotDePasseIciSansSpace
 DB_NAME=leNomDeTaBaseDeDonnéesSansSpace
+JWT_SECRET=czefezfezvfzegezfvzefffefef
 
 Sinon, j'ai utilisé "studen_joy_phpMyAdmin.sql" pour faire les tests
 
