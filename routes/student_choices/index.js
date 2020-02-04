@@ -44,12 +44,11 @@ router.post('/students/application', auth, (req, res) => {
 // Get all student choices
 
 router.get('/students/application', auth, (req, res) => {
-  const studentId = req.params.id;
   const id = req.id;
   console.log('id', id);
   // console.log('req.id', req.id);
   const query = `SELECT 
-  first_name, last_name, speciality_name, school_name, school_address, school.city, school.phone, school.email
+  first_name, last_name, speciality_name, school_name, school_address,school.id as school_id, speciality.id as speciality_id, school.city, school.phone, school.email
   FROM
   student
       INNER JOIN
@@ -72,5 +71,33 @@ WHERE
     }
   });
 });
+
+// Delete specific student choice 
+router.delete('/students/application', auth, (req, res) => {
+  const schoolId = req.body.school_id;
+  const specialityId = req.body.speciality_id;
+  const query = `DELETE
+  FROM
+    application
+  WHERE
+    school_id = ${schoolId} 
+    AND
+    speciality_id= ${specialityId}
+    AND
+    student_id= ${req.id}
+  `;
+  // console.log('req.id', req.id);
+  connection.query(query, (err, results) => {
+    if (err) {
+      res
+        .send(err)
+        .status(500);
+    } else {
+      res
+        .json(results)
+    }
+  });
+});
+
 
 module.exports = router;
