@@ -74,7 +74,6 @@ WHERE
 
 // Delete specific student choice 
 router.delete('/students/application', auth, (req, res) => {
-  console.log("req.body",req)
   const schoolId = req.body.school_id;
   const specialityId = req.body.speciality_id;
   const query = `DELETE
@@ -96,7 +95,6 @@ router.delete('/students/application', auth, (req, res) => {
     } else {
       res
         .json(results)
-        .send(req.body)
     }
   });
 });
